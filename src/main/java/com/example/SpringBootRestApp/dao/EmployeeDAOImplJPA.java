@@ -94,7 +94,7 @@ public class EmployeeDAOImplJPA implements EmployeeDAO{
         em.getTransaction().begin();
 
         // get employee with the given Id and delete it
-        em.remove(em.find(Employee.class, id));
+        em.remove(getEmployeeById(id));
 
         // commit the transaction
         em.getTransaction().commit();
