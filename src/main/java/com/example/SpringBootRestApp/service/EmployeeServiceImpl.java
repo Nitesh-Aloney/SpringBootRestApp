@@ -6,6 +6,7 @@ import com.example.SpringBootRestApp.entity.Employee;
 import com.example.SpringBootRestApp.exception.EmployeeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,17 +52,30 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     @Override
     public void update(Employee employee) {
+        try {
+            getEmployeeById(employee.getId());
+        }catch (EmployeeNotFoundException e){
+            throw  new EmployeeNotFoundException(employee+" doesn't not exist to update information");
+        }
         employeeRepository.save(employee);
     }
 
     @Override
     public void deleteById(Integer id) {
-        employeeRepository.deleteById(id);
+        try{
+            employeeRepository.deleteById(id);
+        }catch (EmptyResultDataAccessException e){
+            throw new EmployeeNotFoundException("Employee with id : "+id+" not found");
+        }
     }
 
     @Override
     public void deleteByEmployee(Employee employee) {
-        employeeRepository.delete(employee);
+        try{
+            employeeRepository.delete(employee);
+        }catch (EmptyResultDataAccessException e){
+            throw new EmployeeNotFoundException(employee+" not found");
+        }
     }
 
 }
