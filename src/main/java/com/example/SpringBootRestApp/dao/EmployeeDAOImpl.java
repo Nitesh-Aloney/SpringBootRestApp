@@ -20,7 +20,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 
     @Transactional
     @Override
-    public List<Employee> listEmployees() {
+    public List<Employee> findAll() {
 
         //  get current session using entityManager
         Session session = entityManager.unwrap(Session.class);
@@ -38,7 +38,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 
     @Transactional
     @Override
-    public void addEmployee(Employee employee){
+    public void save(Employee employee){
         //  get current session using entityManager
         Session session = entityManager.unwrap(Session.class);
 
@@ -48,7 +48,7 @@ public class EmployeeDAOImpl implements EmployeeDAO{
 
     @Transactional
     @Override
-    public Employee getEmployeeById(Integer id) {
+    public Employee findById(Integer id) {
         //  get current session using entityManager
         Session session = entityManager.unwrap(Session.class);
 
@@ -83,12 +83,12 @@ public class EmployeeDAOImpl implements EmployeeDAO{
         Session session = entityManager.unwrap(Session.class);
 
         //  remove the Employee using session
-        session.remove(getEmployeeById(id));
+        session.remove(session.find(Employee.class,id));
     }
 
     @Transactional
     @Override
-    public void deleteByEmployee(Employee employee) {
+    public void delete(Employee employee) {
         deleteById(employee.getId());
     }
 }

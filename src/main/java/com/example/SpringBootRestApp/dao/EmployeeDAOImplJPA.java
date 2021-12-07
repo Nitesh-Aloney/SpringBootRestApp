@@ -4,6 +4,7 @@ import com.example.SpringBootRestApp.entity.Employee;
 import com.example.SpringBootRestApp.exception.EmployeeNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,7 +18,7 @@ public class EmployeeDAOImplJPA implements EmployeeDAO{
     private EntityManagerFactory emf;
 
     @Override
-    public List<Employee> listEmployees() {
+    public List<Employee> findAll() {
 
         //  get entity manager using entityManagerFactory
         EntityManager em = emf.createEntityManager();
@@ -34,23 +35,17 @@ public class EmployeeDAOImplJPA implements EmployeeDAO{
     }
 
     @Override
-    public void addEmployee(Employee employee){
+    public void save(Employee employee){
         //  get entity manager using entityManagerFactory
         EntityManager em = emf.createEntityManager();
-
-        //  begin the transaction
-        em.getTransaction().begin();
 
         // save the employee
         Employee savedEmployee = em.merge(employee);
         System.out.println(savedEmployee);
-
-        // commit the transaction
-        em.getTransaction().commit();
     }
 
     @Override
-    public Employee getEmployeeById(Integer id) {
+    public Employee findById(Integer id) {
         //  get current session using entityManager
         EntityManager em = emf.createEntityManager();
 
@@ -70,6 +65,7 @@ public class EmployeeDAOImplJPA implements EmployeeDAO{
     }
 
     @Override
+    @Transactional
     public void update(Employee employee) {
         //  get entity manager using entityManagerFactory
         EntityManager em = emf.createEntityManager();
@@ -79,13 +75,13 @@ public class EmployeeDAOImplJPA implements EmployeeDAO{
 
         // update the employee
         Employee updatedEmployee = em.merge(employee);
-        System.out.println(updatedEmployee);
 
         // commit the transaction
         em.getTransaction().commit();
     }
 
     @Override
+    @Transactional
     public void deleteById(Integer id) {
         //  get entity manager using entityManagerFactory
         EntityManager em = emf.createEntityManager();
@@ -94,14 +90,15 @@ public class EmployeeDAOImplJPA implements EmployeeDAO{
         em.getTransaction().begin();
 
         // get employee with the given Id and delete it
-        em.remove(getEmployeeById(id));
+        em.remove(em.find(Employee.class, id));
 
         // commit the transaction
         em.getTransaction().commit();
     }
 
     @Override
-    public void deleteByEmployee(Employee employee) {
+    @Transactional
+    public void delete(Employee employee) {
 
         //  get entity manager using entityManagerFactory
         EntityManager em = emf.createEntityManager();

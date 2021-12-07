@@ -7,6 +7,7 @@ import com.example.SpringBootRestApp.exception.response.EmployeeResponse;
 import com.example.SpringBootRestApp.exception.response.Response;
 import com.example.SpringBootRestApp.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
 public class EmployeeController {
 
     @Autowired
+    @Qualifier("employeeServiceImpl")
     private EmployeeService employeeService;
 
     @GetMapping("/")
@@ -27,7 +29,7 @@ public class EmployeeController {
         List<Employee> employees;
 
         try{
-            employees = employeeService.listEmployees();
+            employees = employeeService.findAll();
             EmployeeResponse response = new EmployeeResponse(
                     HttpStatus.OK.value(),
                     "SUCCESS",
@@ -43,7 +45,7 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeResponse> getEmployee(@PathVariable("id") Integer id){
-        Employee employee = employeeService.getEmployeeById(id);
+        Employee employee = employeeService.findById(id);
 
         EmployeeResponse response = new EmployeeResponse(
                 HttpStatus.OK.value(),
@@ -64,7 +66,7 @@ public class EmployeeController {
             throw new EmployeeDataMissingException("Given employee has data missing !!");
         }
 
-        employeeService.addEmployee(employee);
+        employeeService.save(employee);
 
         EmployeeResponse response = new EmployeeResponse(
                 HttpStatus.OK.value(),
@@ -121,7 +123,7 @@ public class EmployeeController {
             throw new EmployeeDataMissingException( "Given employee has data missing !!");
         }
 
-        employeeService.deleteByEmployee(employee);
+        employeeService.delete(employee);
 
         EmployeeResponse response = new EmployeeResponse(
                 HttpStatus.OK.value(),

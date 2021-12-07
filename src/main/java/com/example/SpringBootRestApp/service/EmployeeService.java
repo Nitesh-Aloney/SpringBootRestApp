@@ -9,11 +9,11 @@ import java.util.Optional;
 @Service
 public interface EmployeeService {
 
-    List<Employee> listEmployees();
-    void addEmployee(Employee employee);
-    Employee getEmployeeById(Integer id);
+    List<Employee> findAll();
+    void save(Employee employee);
+    Employee findById(Integer id);
     void update(Employee employee);
     void deleteById(Integer id);
-    void deleteByEmployee(Employee employee);
+    void delete(Employee employee);
 
 }
